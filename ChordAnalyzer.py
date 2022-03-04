@@ -1,4 +1,4 @@
-import NoteNameConverter
+import PitchClassConverter
 
 """
 #Major Triads
@@ -45,9 +45,9 @@ ListOfChords = []
 def IdentifyMajorAndMinorTriads(PitchClassSet):
     for x in PitchClassSet:
         if (x+4)%12 in PitchClassSet and (x+7)%12 in PitchClassSet:
-            ListOfChords.append(NoteNameConverter.PitchClassToNoteName(x) + " Major")
+            ListOfChords.append(PitchClassConverter.PitchClassToNoteName(x) + " Major")
         if (x+3)%12 in PitchClassSet and (x+7)%12 in PitchClassSet:
-            ListOfChords.append(NoteNameConverter.PitchClassToNoteName(x) + " Minor")
+            ListOfChords.append(PitchClassConverter.PitchClassToNoteName(x) + " Minor")
     if ListOfChords == "":    
         ListOfChords.append("No Major or Minor Triads")
     return ListOfChords
@@ -56,13 +56,13 @@ def IdentifyMajorAndMinorTriads(PitchClassSet):
 def IdentifyAllTriads(PitchClassSet):
     for x in PitchClassSet:
         if (x+4)%12 in PitchClassSet and (x+7)%12 in PitchClassSet:
-            ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Major"))
+            ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Major"))
         if (x+3)%12 in PitchClassSet and (x+7)%12 in PitchClassSet:
-            ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Minor"))
+            ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Minor"))
         if (x+3)%12 in PitchClassSet and (x+6)%12 in PitchClassSet:
-            ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Diminished"))
+            ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Diminished"))
         if (x+4)%12 in PitchClassSet and (x+8)%12 in PitchClassSet:
-            ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Augmented"))
+            ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Augmented"))
     if ListOfChords == "": 
         ListOfChords.append("No Triads")
     return ListOfChords
@@ -72,25 +72,25 @@ def IdentifyAllSeventhChords(PitchClassSet):
     for x in PitchClassSet:
         #Major 7
         if (x+4)%12 in PitchClassSet and (x+7)%12 and (x+11)%12 in PitchClassSet:
-                ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Major 7"))
+                ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Major 7"))
         #Dominant 7
         if (x+4)%12 in PitchClassSet and (x+7)%12 and (x+10)%12 in PitchClassSet:
-                ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Dominant 7"))
+                ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Dominant 7"))
         #Minor 7
         if (x+3)%12 in PitchClassSet and (x+7)%12 and (x+10)%12 in PitchClassSet:
-                ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Minor 7"))
+                ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Minor 7"))
         #Minor-Major 7
         if (x+3)%12 in PitchClassSet and (x+7)%12 and (x+11)%12 in PitchClassSet:
-                ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Minor-Major 7"))
+                ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Minor-Major 7"))
         #Half-Dimished 7
         if (x+3)%12 in PitchClassSet and (x+6)%12 and (x+10)%12 in PitchClassSet:
-                ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Half-Dimished 7"))
+                ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Half-Dimished 7"))
         #Fully Diminished 7
         if (x+3)%12 in PitchClassSet and (x+7)%12 and (x+9)%12 in PitchClassSet:
-                ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Fully-Diminished 7"))
+                ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Fully-Diminished 7"))
         #Augmented 7
         if (x+4)%12 in PitchClassSet and (x+8)%12 and (x+11)%12 in PitchClassSet:
-                ListOfChords.append(str(NoteNameConverter.PitchClassToNoteName(x) + " Augmented 7"))
+                ListOfChords.append(str(PitchClassConverter.PitchClassToNoteName(x) + " Augmented 7"))
     if ListOfChords == "": 
         ListOfChords.append("No Seventh Chords")
     return ListOfChords

@@ -5,19 +5,8 @@ It will then analyze the anti-scale for possible chords.
 There is no plan to add a GUI.
 The features of this program will eventually be transplanted to the larger Scale Architect, with will have a GUI.
 """
-"""
-Given Input:
-CDEFGAB
-
-Desired Output (Just Major and Minor Triads, With invariable Perfect 5th):
-C, C#/Db, D#/Eb, F#/Gb, G, G#/Ab, A#/Bb
-C Minor
-Eb Major
-Eb Minor
-Gb Major
-"""
-import NoteNameConverter
-import ChordTypeFunctions
+import PitchClassConverter
+import ChordAnalyzer
 #import re
 
 #Use re.split() function so that user can input all notes at once
@@ -43,11 +32,6 @@ userAnswer = input("Y/n:")
 if userAnswer == "N" or userAnswer == "n":
     exit()
 
-#Convert UserScaleNoteNames to UserScalePitchClasses
-UserScalePitchClasses = []
-for x in UserScaleNoteNames:
-    UserScalePitchClasses.append(NoteNameConverter.NoteNameToPitchClass(x))
-
 #User specifies invariable pitches.
 invariableFifth = ""
 print("Would you like the anti-scale to contain an invariable perfect fifth from the root?")
@@ -56,14 +40,27 @@ if invariableFifth.lower() == "n":
     invariableFifth = False
 else: invariableFifth = True
 
+#Convert UserScaleNoteNames to UserScalePitchClasses
+UserScalePitchClasses = []
+for x in UserScaleNoteNames:
+    UserScalePitchClasses.append(PitchClassConverter.NoteNameToPitchClass(x))
+
+#Transpose UserScalePitchClasses to 0 level
+TransposedUserScalePitchClasses = PitchClassConverter.TransposePitchClassSetToZero(UserScalePitchClasses)
+print(TransposedUserScalePitchClasses)
+
 #generate Anti-Scale pitch classes
 ChromaticScalePitchClasses = (0,1,2,3,4,5,6,7,8,9,10,11)
-AntiScalePitchClasses = list(ChromaticScalePitchClasses)
+TransposedAntiScalePitchClasses = list(ChromaticScalePitchClasses)
 for x in range(12):
     if x == 7 and invariableFifth == True:
         pass
-    elif UserScalePitchClasses.count(x) == 1 and x != 0:
-        AntiScalePitchClasses.remove(x)
+    elif TransposedUserScalePitchClasses.count(x) == 1 and x != 0:
+        TransposedAntiScalePitchClasses.remove(x)
+
+#Transpose AntiScale Pitch Classes to User's Original level
+transpositionFactor = UserScalePitchClasses[0]
+AntiScalePitchClasses = PitchClassConverter.TransposePitchClassSet(TransposedAntiScalePitchClasses, transpositionFactor)
 
 #user specify desired chord qualities to check for
 print("What chord qualities would you like to anaylze?")
@@ -72,19 +69,19 @@ chordQualitiesToAnalyze = int(input("0 = Major and Minor Triads | 1 = All Triads
 #Analyze for user-specified chord qualities
 AntiScaleChords = []
 if chordQualitiesToAnalyze == 0:
-    AntiScaleChords = ChordTypeFunctions.IdentifyMajorAndMinorTriads(AntiScalePitchClasses)
+    AntiScaleChords = ChordAnalyzer.IdentifyMajorAndMinorTriads(AntiScalePitchClasses)
 elif chordQualitiesToAnalyze == 1:
-    AntiScaleChords = ChordTypeFunctions.IdentifyAllTriads(AntiScalePitchClasses)
+    AntiScaleChords = ChordAnalyzer.IdentifyAllTriads(AntiScalePitchClasses)
 elif chordQualitiesToAnalyze == 2:
-    AntiScaleChords = ChordTypeFunctions.IdentifyAllSeventhChords(AntiScalePitchClasses)
+    AntiScaleChords = ChordAnalyzer.IdentifyAllSeventhChords(AntiScalePitchClasses)
 
 #convert new pitch class set to note names (see NoteNameConverter)
 AntiScaleNoteNames = []
 for x in range(len(AntiScalePitchClasses)):
-    AntiScaleNoteNames.append(NoteNameConverter.PitchClassToNoteName(AntiScalePitchClasses[x]))
+    AntiScaleNoteNames.append(PitchClassConverter.PitchClassToNoteName(AntiScalePitchClasses[x]))
 
 #Print Anti-scale with chord possibilities
 print(AntiScaleNoteNames)
 print(AntiScaleChords)
 
-#Big problem - I need to account for scale roots that are not C
+#Reevluate variable names to be more clear

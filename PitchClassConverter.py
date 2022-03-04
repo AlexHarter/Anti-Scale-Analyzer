@@ -1,7 +1,5 @@
 """
-I could do a series of elif statements, but that seems kind of dinosaur
-Or, I could use a dictionary?
-Or, perhaps I should use a similar method to my FizzBuzz program and start with the array or list then modify
+Is there another solution besides elif statements? Dictionary?
 """
 
 def NoteNameToPitchClass(noteName):
@@ -61,3 +59,17 @@ def PitchClassToNoteName(pitchClass):
     else:
         return "error"
 
+def TransposePitchClassSetToZero(PitchClassSet):
+    TransposedPitchClassSet = []
+    transpositionFactor = PitchClassSet[0]
+    for x in range(len(PitchClassSet)):
+        TransposedPitchClassSet.append(((PitchClassSet[x] - transpositionFactor) + 12) % 12)
+    return TransposedPitchClassSet
+
+def TransposePitchClassSet(PitchClassSet, transpositionFactor):
+    TransposedPitchClassSet = []
+    for x in range(len(PitchClassSet)):
+        TransposedPitchClassSet.append((PitchClassSet[x] + transpositionFactor) % 12)
+    return TransposedPitchClassSet
+
+#Go through each function and cast variable types
