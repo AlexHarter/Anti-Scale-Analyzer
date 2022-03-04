@@ -1,11 +1,10 @@
-
 """
-I could do a series of elseif statements, but that seems kind of dinosaur
+I could do a series of elif statements, but that seems kind of dinosaur
 Or, I could use a dictionary?
 Or, perhaps I should use a similar method to my FizzBuzz program and start with the array or list then modify
 """
 
-def NameToPitchClass(noteName):
+def NoteNameToPitchClass(noteName):
     if noteName.lower() == "c":
         return 0
     elif noteName.lower() == "c#" or noteName.lower() == "db":
@@ -34,29 +33,29 @@ def NameToPitchClass(noteName):
         return -1
 
 
-def PitchClassToName(pitchClass):
+def PitchClassToNoteName(pitchClass):
     if pitchClass == 0:
         return "C"
     elif pitchClass == 1:
-        return "C#"
+        return "C#/Db"
     elif pitchClass == 2:
         return "D"
     elif pitchClass == 3:
-        return "D#"
+        return "D#/Eb"
     elif pitchClass == 4:
         return "E"
     elif pitchClass == 5:
         return "F"
     elif pitchClass == 6:
-        return "F#"
+        return "F#/Gb"
     elif pitchClass == 7:
         return "G"
     elif pitchClass == 8:
-        return "G#"
+        return "G#/Ab"
     elif pitchClass == 9:
         return "A"
     elif pitchClass == 10:
-        return "A#"
+        return "A#/Bb"
     elif pitchClass == 11:
         return "B"
     else:
