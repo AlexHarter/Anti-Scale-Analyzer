@@ -95,7 +95,6 @@ def IdentifyAllSeventhChords(PitchClassSet):
         ListOfChords.append("No Seventh Chords")
     return ListOfChords
 
-
 """
 Secundal Triads & Tetrads (How to label?)
 Tertian Triads & Tetrads
