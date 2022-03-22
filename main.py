@@ -7,42 +7,42 @@ The features of this program will eventually be transplanted to the larger Scale
 """
 import PitchClassConverter
 import ChordAnalyzer
-#import re
-
-#Use re.split() function so that user can input all notes at once
 
 #User specifies number of pitches in the scale.
-#This is limited based on the presupposition that the smallest meaningful number of notes a scale can have is 5.
+#This is limited to between 5 and 9 based on the presupposition that the smallest meaningful number of notes a scale can have is 5.
+print("How many pitches are in the scale?")
 while True:
-    print("How many pitches are in the scale?")
-    while True:
-        while True:
-            UserInputNumberOfPitches = str(input("Enter a number between 5 and 9: "))
-            if [A-z] in NumberOfPitches:
-                print("That is not a number between 5 and 9.")
-            else:
-                NumberOfPitches = int(UserInputNumberOfPitches)
-                break
+    try:
+        NumberOfPitches = int(input("Enter a number between 5 and 9, inclusive: "))
+    except:
+        print("That is not a number.")
+    else:
         if NumberOfPitches >= 5 and NumberOfPitches <= 9:
             break
-        else: print("That is not a number between 5 and 9.")
+        else:
+            print("That is not a number between 5 and 9.")
 
-    #User inputs note names for the original scale.  Later, take away the conversion, so the user can check their scale first.
-    UserScaleNoteNames = []
-    ScaleDegreeCounter = ("2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th")
-    PossibleNoteNames = ("C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B")
-    i = 0
-    UserScaleNoteNames.append(str(input("Enter the root: ")))
+#User inputs note names for the original scale.
+#This does not account for the user entering scale degrees in the wrong order.
+ScaleDegreeCounter = ("2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th")
+AllNoteNames = ("c", "c#", "db", "d", "d#", "eb", "e", "f", "f#", "gb", "g", "g#", "ab", "a", "a#", "bb", "b")
+UserScaleNoteNames = []
+
+while True:
+    i = -1
     for x in range(NumberOfPitches-1):
         while True:
-            userInputNoteName = str(input("Enter note name of the " + ScaleDegreeCounter[i] + " scale degree: "))
-            if PossibleNoteNames.count(userInputNoteName) == 1:
+            if i == -1:
+                userInputNoteName = str(input("Enter the note name of the root: "))
+            else:
+                userInputNoteName = str(input("Enter the note name of the " + ScaleDegreeCounter[i] + " scale degree: "))
+            if AllNoteNames.count(userInputNoteName.lower()) == 1:
                 UserScaleNoteNames.append(userInputNoteName)
                 i+=1
                 break
             else: print("That is not a note name.")
 
-    #User confirms that scale is correct
+    #User confirms that scale is correct. If not, restart process.
     print("Is this your scale?")
     print(UserScaleNoteNames)
     userAnswer = input("Y/n:")
@@ -50,9 +50,8 @@ while True:
         break
 
 #User specifies invariable pitches.
-invariableFifth = ""
 print("Would you like the anti-scale to contain an invariable perfect fifth from the root?")
-invariableFifth = str(input("Y/n:"))
+invariableFifth = input("Y/n: ")
 if invariableFifth.lower() == "n":
     invariableFifth = False
 else: invariableFifth = True
@@ -66,8 +65,8 @@ for x in UserScaleNoteNames:
 TransposedUserScalePitchClasses = PitchClassConverter.TransposePitchClassSetToZero(UserScalePitchClasses)
 
 #generate Anti-Scale pitch classes
-ChromaticScalePitchClasses = (0,1,2,3,4,5,6,7,8,9,10,11)
-TransposedAntiScalePitchClasses = list(ChromaticScalePitchClasses)
+AllPitchClasses = (0,1,2,3,4,5,6,7,8,9,10,11)
+TransposedAntiScalePitchClasses = list(AllPitchClasses)
 for x in range(12):
     if x == 7 and invariableFifth == True:
         pass
@@ -82,18 +81,22 @@ AntiScalePitchClasses = PitchClassConverter.TransposePitchClassSet(TransposedAnt
 print("What chord qualities would you like to anaylze?")
 print("0 = Major and Minor Triads | 1 = All Triads | 2 = All Seventh Chords")
 while True:
-    chordQualitiesToAnalyze = int(input("0, 1, or 2: "))
-    if chordQualitiesToAnalyze >= 0 and chordQualitiesToAnalyze <= 2:
-        break
-    else: print("That is not 0, 1, or 2")
+    try:
+        chordQualities = int(input("0, 1, or 2: "))
+        if chordQualities >= 0 and chordQualities <= 2:
+            break
+        else: print("That is not 0, 1, or 2")
+    except:
+        print("That is not a number.")
+
 
 #Analyze for user-specified chord qualities
 AntiScaleChords = []
-if chordQualitiesToAnalyze == 0:
+if chordQualities == 0:
     AntiScaleChords = ChordAnalyzer.IdentifyMajorAndMinorTriads(AntiScalePitchClasses)
-elif chordQualitiesToAnalyze == 1:
+elif chordQualities == 1:
     AntiScaleChords = ChordAnalyzer.IdentifyAllTriads(AntiScalePitchClasses)
-elif chordQualitiesToAnalyze == 2:
+elif chordQualities == 2:
     AntiScaleChords = ChordAnalyzer.IdentifyAllSeventhChords(AntiScalePitchClasses)
 
 #convert new pitch class set to note names (see NoteNameConverter)
@@ -101,11 +104,18 @@ AntiScaleNoteNames = []
 for x in range(len(AntiScalePitchClasses)):
     AntiScaleNoteNames.append(PitchClassConverter.PitchClassToNoteName(AntiScalePitchClasses[x]))
 
-#Print Anti-scale with chord possibilities
+#Print Anti-scale
 if invariableFifth == True:
-    print ("Here is the anti-scale (with an invariable perfect fifth)")
-else: print("Here is your anti-scale:")
+    print ("Here is the anti-scale (with an invariable perfect fifth):")
+else: print("Here is your anti-scale (without an invariable perfect fifth):")
 print(AntiScaleNoteNames)
-print(AntiScaleChords)
 
-#Reevaluate variable names to be more clear
+#Print chord possibilities
+if chordQualities == 0:
+    chordsAnalyzed = "Major and Minor Triads"
+elif chordQualities == 1:
+    chordsAnalyzed = "Triads"
+elif chordQualities == 2:
+    chordsAnalyzed = "Seventh Chords"
+print("Here are the possible " + + " that can be made with ")
+print(AntiScaleChords)
