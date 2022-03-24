@@ -1,5 +1,7 @@
 """
 Is there another solution besides elif statements? Dictionary?
+Perhaps I could pull from a tuple?  .count()?
+Should I define a function for reordering a scale?
 """
 
 def NoteNameToPitchClass(noteName):

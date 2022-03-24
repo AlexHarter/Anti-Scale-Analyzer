@@ -1,36 +1,37 @@
 """
 The purpose of this program is to generate an anti-scale, 
 that is, a complimentary set with an invariable root and possibly fifth depending on user preferences.
-It will then analyze the anti-scale for possible chords.
-There is no plan to add a GUI.
-The features of this program will eventually be transplanted to the larger Scale Architect, with will have a GUI.
+It will then analyze the anti-scale for possible user-specified chords.
 """
 import PitchClassConverter
 import ChordAnalyzer
 
-#User specifies number of pitches in the scale.
-#This is limited to between 5 and 9 based on the presupposition that the smallest meaningful number of notes a scale can have is 5.
-print("How many pitches are in the scale?")
-while True:
-    try:
-        NumberOfPitches = int(input("Enter a number between 5 and 9, inclusive: "))
-    except:
-        print("That is not a number.")
-    else:
-        if NumberOfPitches >= 5 and NumberOfPitches <= 9:
-            break
-        else:
-            print("That is not a number between 5 and 9.")
-
-#User inputs note names for the original scale.
-#This does not account for the user entering scale degrees in the wrong order.
 ScaleDegreeCounter = ("2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th")
 AllNoteNames = ("c", "c#", "db", "d", "d#", "eb", "e", "f", "f#", "gb", "g", "g#", "ab", "a", "a#", "bb", "b")
 UserScaleNoteNames = []
 
+#User specifies number of pitches in the scale.
+#This is limited to between 5 and 9 based on the presupposition that the smallest meaningful number of notes a scale can have is 5.
 while True:
+    print("How many pitches are in the scale?")
+    while True:
+        try:
+            NumberOfPitches = int(input("Enter a number between 5 and 9, inclusive: "))
+        except:
+            print("That is not an integer.")
+        else:
+            if NumberOfPitches >= 5 and NumberOfPitches <= 9:
+                break
+            else:
+                print("That is not a number between 5 and 9.")
+
+#User inputs note names for the original scale.
+#TODO: account for user entering in duplicate pitches
+#TODO: allow user to specify number of pitches again if they don't accept the input scale.
+#TODO: account for user not entering scale pitches in ascending order.
+
     i = -1
-    for x in range(NumberOfPitches-1):
+    for x in range(NumberOfPitches):
         while True:
             if i == -1:
                 userInputNoteName = str(input("Enter the note name of the root: "))
@@ -87,7 +88,7 @@ while True:
             break
         else: print("That is not 0, 1, or 2")
     except:
-        print("That is not a number.")
+        print("That is not an integer.")
 
 
 #Analyze for user-specified chord qualities
@@ -117,5 +118,5 @@ elif chordQualities == 1:
     chordsAnalyzed = "Triads"
 elif chordQualities == 2:
     chordsAnalyzed = "Seventh Chords"
-print("Here are the possible " + + " that can be made with ")
+print("Here are the possible " + chordsAnalyzed + " that can be made with your anti-scale:")
 print(AntiScaleChords)

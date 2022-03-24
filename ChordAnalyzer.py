@@ -101,3 +101,5 @@ Tertian Triads & Tetrads
 Quartal Triads & Tetrads (How to label?)
 Quintal Triads & Tetrads (Redundant?)
 """
+
+#TODO: Modify methods to receive user input
