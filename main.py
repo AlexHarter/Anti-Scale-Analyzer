@@ -12,6 +12,7 @@ UserScaleNoteNames = []
 
 #User specifies number of pitches in the scale.
 #This is limited to between 5 and 9 based on the presupposition that the smallest meaningful number of notes a scale can have is 5.
+#A scale of 9 pitches would yield an anti-scale of 5 pitches.
 while True:
     print("How many pitches are in the scale?")
     while True:
@@ -26,22 +27,32 @@ while True:
                 print("That is not a number between 5 and 9.")
 
 #User inputs note names for the original scale.
-#TODO: account for user entering in duplicate pitches
-#TODO: allow user to specify number of pitches again if they don't accept the input scale.
 #TODO: account for user not entering scale pitches in ascending order.
 
     i = -1
     for x in range(NumberOfPitches):
         while True:
+            print(UserScaleNoteNames)
             if i == -1:
                 userInputNoteName = str(input("Enter the note name of the root: "))
             else:
                 userInputNoteName = str(input("Enter the note name of the " + ScaleDegreeCounter[i] + " scale degree: "))
-            if AllNoteNames.count(userInputNoteName.lower()) == 1:
-                UserScaleNoteNames.append(userInputNoteName)
-                i+=1
-                break
-            else: print("That is not a note name.")
+            try:
+                if PitchClassConverter.NoteNameToPitchClass(userInputNoteName) >= (PitchClassConverter.NoteNameToPitchClass(UserScaleNoteNames[i+1])+3)%12:
+                    print("The pitches should be entered in ascending order.")
+            except:
+                pass
+            finally:
+                if UserScaleNoteNames.count(userInputNoteName.lower()) == 1:
+                    print("That is a duplicate pitch.")
+                #BUG allows duplicates of different captilizations
+                elif AllNoteNames.count(userInputNoteName.lower()) == 1:
+                    #TODO the program should correct user input to correct capitalization
+                    UserScaleNoteNames.append(userInputNoteName)
+                    i+=1
+                    print(UserScaleNoteNames[i])
+                    break
+                else: print("That is not a note name.")
 
     #User confirms that scale is correct. If not, restart process.
     print("Is this your scale?")
@@ -89,7 +100,6 @@ while True:
         else: print("That is not 0, 1, or 2")
     except:
         print("That is not an integer.")
-
 
 #Analyze for user-specified chord qualities
 AntiScaleChords = []
