@@ -3,6 +3,7 @@ The purpose of this program is to generate an anti-scale,
 that is, a complimentary set with an invariable root and possibly fifth depending on user preferences.
 It will then analyze the anti-scale for possible user-specified chords.
 """
+from psutil import users
 import PitchClassConverter as pcc
 import ChordAnalyzer as ca
 
@@ -15,27 +16,28 @@ while True:
     #This is limited to between 5 and 9 based on the presupposition that the smallest meaningful number of notes a scale can have is 5.
     #And a scale of 9 pitches would yield an anti-scale of 5 pitches.
     UserScaleNoteNames = []
+    UserScalePitchClasses = []
     print("How many pitches are in the scale?")
     while True:
-        try: NumberOfPitches = int(input("Enter a number between 5 and 9, inclusive: "))
-        except: print("That is not an integer.")
+        try: NumberOfPitches = int(input("Enter a whole number between 5 and 9, inclusive: "))
+        except ValueError: print("That is not an integer.")
         else:
             if NumberOfPitches >= 5 and NumberOfPitches <= 9: break
-            else: print("That is not a number between 5 and 9.")
+            else: print("That is not a whole number between 5 and 9, inclusive.")
 
     #User inputs note names for the original scale.
-    #Before input is added to Scale list, check to ensure that it is
+    #Before input is added to Scale list, check to ensure that it is:
     #a valid note name; not a duplicate (not for root); and ascending (not for root).
     i = -1
     for x in range(NumberOfPitches):
         while True:
-            scaleValidity = True
             if i == -1:
                 userInputNoteName = str(input("Enter the note name of the root: ")).lower()
                 if AllNoteNames.count(userInputNoteName) is 0:
                     print("That is not a note name.")
                 else:
                     UserScaleNoteNames.append(userInputNoteName)
+                    UserScalePitchClasses.append(pcc.NoteNameToPitchClass(userInputNoteName))
                     i+=1
                     break
             elif i >= 0:
@@ -44,23 +46,30 @@ while True:
                     print("That is not a note name.")
                 elif UserScaleNoteNames.count(userInputNoteName) is 1:
                     print("That is a duplicate pitch.")
-                    #BUG this doesn't account for enharmonic spellings.
-                elif pcc.NoteNameToPitchClass(userInputNoteName) > ((pcc.NoteNameToPitchClass(UserScaleNoteNames[i])+4)%12):
+                elif UserScalePitchClasses.count(pcc.NoteNameToPitchClass(userInputNoteName)) == 1:
+                    print("That is a duplicate pitch (enharmonic equivalence).")
+                elif pcc.NoteNameToPitchClass(userInputNoteName) - pcc.NoteNameToPitchClass(UserScaleNoteNames[i]) < 0:
+                        #BUG this doesn't work when crossing from 11 to 0
+                        #Solution: checking if it surpasses the root for adding on octave
+                        print(pcc.NoteNameToPitchClass(userInputNoteName))
+                        print(((pcc.NoteNameToPitchClass(UserScaleNoteNames[i])+4)%12))
                         #based on the presupposition that a scale would not contain an interval greater than a Major Third.
                         print("The pitches should be entered in ascending order.")
                 else:
                     UserScaleNoteNames.append(userInputNoteName)
+                    UserScalePitchClasses.append(pcc.NoteNameToPitchClass(userInputNoteName))
                     i+=1
                     break
-
+#TODO make a feature to restart whole scale input process at any step
     #Note name capitilization is corrected.
     i = 0
     for x in UserScaleNoteNames:
-        if len(x) is 1: UserScaleNoteNames[i] = x[0].upper()
-        elif len(x) is 2: UserScaleNoteNames[i] = x[0].upper() + x[1]
+        match len(x):
+            case 1: UserScaleNoteNames[i] = x[0].upper()
+            case 2: UserScaleNoteNames[i] = x[0].upper() + x[1]
         i+=1
 
-    #User confirms that scale is correct. If not, restart process.
+    #User confirms that scale is correct. If not, restart scale input.
     print("Is this your scale?")
     print(UserScaleNoteNames)
     userAnswer = input("Y/n:")
@@ -71,12 +80,6 @@ print("Would you like the anti-scale to contain an invariable perfect fifth from
 invariableFifth = input("Y/n: ")
 if invariableFifth.lower() is "n": invariableFifth = False
 else: invariableFifth = True
-
-#Converts UserScaleNoteNames to UserScalePitchClasses
-#TODO implement this to happen at the same time as building UserScaleNoteNames so that duplicate pitches can be checked.
-UserScalePitchClasses = []
-for x in UserScaleNoteNames:
-    UserScalePitchClasses.append(pcc.NoteNameToPitchClass(x))
 
 #Transposes UserScalePitchClasses to 0 level
 TransposedUserScalePitchClasses = pcc.TransposePitchClassSetToZero(UserScalePitchClasses)
